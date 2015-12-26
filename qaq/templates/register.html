@@ -1,0 +1,39 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<title>Login</title>
+<!-- Custom Theme files -->
+{% load staticfiles %}<link href="{% static 'styles/login_style.css'%}" rel="stylesheet" type="text/css" media="all"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta name="keywords" content="" />
+</head>
+<body>
+<!--login form start here-->
+<h1>注册</h1>
+<div class="login">
+	    <div class="rib"> </div>
+	    <form action="/registerDetail/" method="post">
+            <input type="text" name="Username" placeholder="用户名" value="{{name}}">
+            {% if n_error %} <p style="color: red;">请输入用户名！</p> {% endif %}
+			<input type="text" name="Email_Address" placeholder="邮箱" value="{{addr}}">
+            {% if a_error %} <p style="color: red;">请输入邮箱地址！</p> {% endif %}
+            {% if not_error %} <p style="color: red;">邮箱格式必须正确！</p> {% endif %}
+            {% if not1_error %} <p style="color: red;">该邮箱已被注册，请更换 </p> {% endif %}
+			<input type="password" name="Password" placeholder="密码" value="{{password}}">
+            {% if p_error %} <p style="color: red;">请输入密码！</p> {% endif %}
+            {% if p1_error %} <p style="color: red;">密码长度必须大于6位 </p> {% endif %}
+            <input type="password" name="Password_con" placeholder="确认密码" value="{{password1}}">
+            {% if con_error %} <p style="color: red;">请确认密码！</p> {% endif %}
+            {% if equal_error %} <p style="color: red;">密码不一致！</p> {% endif %}
+			<input type="submit" value="SIGN IN" >
+	    </form>
+</div>
+<div class="copyright">
+	<p>&copy; <a href="#" title="Information Architecture and Web Design">Copyright 2015 Shawhure</a></p>
+</div>
+<!--login form end here-->	
+</body>
+</html>

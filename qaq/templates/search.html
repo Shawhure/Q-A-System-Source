@@ -1,0 +1,17 @@
+﻿<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+<div class="jumbotron">
+以下是否解决了您的问题?
+{% if questions %}
+    <ul>
+        {% for question in questions %}
+        <p><a href="/answer_question/?no={{question.No}}">{{ question.Title }} -{{ question.Answers.all|length }}个回答</a></p>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No questions matched your search criteria.</p>
+{% endif %}
+</div>
+</body>

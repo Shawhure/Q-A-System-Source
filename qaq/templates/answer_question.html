@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="CHN/CN" lang="CHN/CN">
+<head>
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+	<!--<link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.2.0/css/bootstrap.min.css">-->
+	<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css"rel="stylesheet">
+	<script type="text/javascript">
+	function loadXMLDoc()
+	{
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+		document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+		}
+	  }
+	xmlhttp.open("GET","/comment/",true);
+	xmlhttp.send();
+	}
+	</script>
+
+	<meta charset="utf-8">
+	<!--meta http-equiv="content-type" content="text/html;charset=iso-8859-2" /-->
+	<meta http-equiv="content-Type" content="text/html;charset=gb2312">
+	<meta name="author" content="Luka Cvrk (www.solucija.com)" />
+	{% load staticfiles %}<link rel="stylesheet" href="{% static 'styles/style.css'%}" type="text/css" />
+	<title>小灰问答</title>
+</head>
+<body>
+	<font size="2px" ">
+	<div id="content">
+		<div id="header">
+						<p id="top_info">
+            {% if islogin %}
+             <a href="/myhome/">我的主页</a>/<a href="/logout/">注销</a> 
+            {% else %}
+             <a href="/register/">注册</a>/<a href="/login/">登录</a> 
+            {% endif %}
+            </p>
+			
+			<div id="logo">
+				<h1><a href="#" title="Centralized Internet Content">小灰问答</a></h1>
+				<p>What do you want to share today?</p>
+			</div>
+		</div>		
+		<div id="tabs">
+			<ul>	
+				<li><a href="/" accesskey="m"><span class="key">首页</span></a></li>
+				<li><a href="/topic/" class="current" accesskey="v"><span class="key">话题</span></a></li>
+				<li><a href="/find/" accesskey="r"><span class="key">发现</span></a></li>
+                <li><a href="/info/" class="current" accesskey="v"><span class="key">消息</span></a></li>
+				<li><a href="/myhome/" accesskey="r"><span class="key">我的主页</span></a></li>
+                <li><a href="/ask/" accesskey="r"><span class="key">提问</span></a></li>
+			</ul>
+		</div>
+		<div>
+			<div id="right">
+			<form name="form" method="post" action="/add_answer/">			
+				<input type="hidden" name="no" value="{{question.No}}"/>
+				<input type="hidden" name="follow" value="{{follow}}"/>
+				<input name="follow" align="right" style="color:gray;size:1px"  class="btn" type="submit"  value="{{follow}}" ></input>
+				</form>
+			</div>
+			<div class="left_articles">
+				<font size="2px">
+				<h1>{{question.Title}}</h1>
+				<div>{{question.Description}}</div>				
+				</font>
+			<nobr style="color:gray;size:1px"><a href="/tag/?tag_name={{tag_name}}">{{tag_string}}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/otherhome/?no={{asker.User_No}}">{{asker.User_Name}}</a>提出了这个问题 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ answers|length }}个人回答了该问题 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h1 style="color:gray" class="btn" data-toggle="collapse" data-target="#ques_comment">显示评论</h1></nobr>
+			</div>
+			</div>
+		<!--<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#ques_comment">显示评论</button>-->
+		<div id="ques_comment" class ="collapse">
+		{% for qcomment in q_comment %}
+		<div class="left_articles">
+		<p><a href="/otherhome/?no={{qcomment.1.User_No}}">{{qcomment.1.User_Name}}评论了这个问题</a></p>
+		<p>{{qcomment.0}}</p>
+		</div>
+		{% endfor %}
+		<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">评论</button>
+		<div name="demo" id="demo" class="collapse">
+						<form class="form" action="/add_answer/" method="post">
+							<p class="text">
+							<input type="hidden" name="no" value="{{question.No}}"/>
+							<textarea name="ask_comment" placeholder="评论"></textarea>
+							</p>
+							<p class="submit">
+							<input type="reset" value="重置" />
+							<input type="submit" value="发布" />
+							</p>
+						</form>
+		</div>
+		</div>
+		</font>
+		<font size="1.5px">
+
+		</font>
+		<font size="2px">	
+		{% for answer in answers %}
+			<div class="left">
+				<div class="left_articles" id="ans-{{answer.0.Ans_No}}">
+					{% if answer.4.User_Description %}
+					<p><strong><a href="/otherhome/?no={{answer.4.User_No}}">{{answer.4.User_Name}}</a>, {{answer.4.User_Description}} </strong></p>
+					{% else %}
+					<p><strong><a href="/otherhome/?no={{answer.4.User_No}}">{{answer.4.User_Name}}</a>, 这个人很懒,没有添加任何描述 </strong></p>
+					{% endif %}
+					<font size="2px">
+					<p>{{answer.0.Ans_Context}}</p>
+					</font>
+					<form name="form" method="post" action="/add_answer/">
+					<input type="hidden" name="no" value="{{question.No}}"/>
+					<input type="hidden" name="praise" value="{{answer.0.Ans_No}}"/>
+					<input name="ok"  style="color:gray;size:1px" class="btn" type="submit" id="ok{{answer.0.Ans_No}}" value="{{answer.1}}" onclick="hao('ok'+{{answer.0.Ans_No}});"></input>
+					<nobr style="color:gray;size:1px">{{ answer.3 }}个人赞了该回答&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h1 style="color:gray" class="btn" data-toggle="collapse" data-target="#comment{{answer.0.Ans_No}}">显示评论&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1></nobr>
+					<p></p>
+					<nobr style="color:gray;size:1px">编辑于{{answer.0.Ans_Time}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</nobr>
+					</form>
+					<p></p>
+					<div id="comment{{answer.0.Ans_No}}" class="collapse">
+					{% for comment in answer.2 %}
+					<p><a href="/otherhome/?no={{comment.1.User_No}}">{{comment.1.User_Name}}评论了这个回答</a></p>
+					<p>{{comment.0}}</p>
+					<HR>
+					{% endfor %}
+					<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo{{answer.0.Ans_No}}">评论</button>
+					<div id="demo{{answer.0.Ans_No}}" class="collapse">
+						<form class="form_ok{{answer.0.Ans_No}}" action="/add_answer/" method="post">
+							<p class="text">
+							<input type="hidden" name="no" value="{{question.No}}"/>
+							<input type="hidden" name="Ans_comment" value="{{answer.0.Ans_No}}"/>
+							<textarea name="comment" placeholder="评论"></textarea>
+							</p>
+							<p class="submit">
+							<input type="reset" value="重置" />
+							<input type="submit" value="发布" />
+							</p>
+						</form>
+					</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		<div class="left">
+			<div class="left_articles">
+				<form class="form" action="/add_answer/" method="post">
+					<p class="text">
+					<input type="hidden" name="no" value="{{question.No}}"/>
+					<textarea name="answer" placeholder="在这些下你的回答..."></textarea>
+					</p>
+					<p class="submit">
+					<input type="reset" value="重置" />
+					<input type="submit" value="发布" />
+					</p>
+				</form>
+			</div>
+		</div>
+	</div>
+		<div class="footer">
+			&copy; <a href="#" title="Information Architecture and Web Design">Copyright 2015 Shawhure</a>
+		</div>
+	</div>
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://apps.bdimg.com/libs/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	</font>
+</body>
+</html>

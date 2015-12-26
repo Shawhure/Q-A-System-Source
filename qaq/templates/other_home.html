@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+<title>Other Home</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+{% load staticfiles %}<link rel="stylesheet" href="{% static 'styles/myhome_style.css'%}" type="text/css" media="all" />
+<script type="text/javascript">
+var number=8; //定义条目数
+
+function LMYC() {
+var lbmc;
+    for (i=1;i<=number;i++) {
+        lbmc = eval('LM' + i);
+        lbmc.style.display = 'none';
+    }
+}
+ 
+function ShowFLT(i) {
+    lbmc = eval('LM' + i);
+    if (lbmc.style.display == 'none') {
+        LMYC();
+        lbmc.style.display = '';
+    }
+    else {
+        lbmc.style.display = 'none';
+    }
+}
+</script>
+</head>
+<body>
+	<p id="top_info">
+		<h2>ta的信息</h2>
+			<p class="name">{{other.User_Name}},
+			{% if other.User_Description %}
+				{{other.User_Description}}</p>
+			{% else %}
+				这个人很懒，什么都没留下</p>
+			{% endif %}
+			<label>问题</label>
+			<dl>
+			<dt onClick=javascript:ShowFLT(1) href="javascript:void(null)"><a href="javascript:;">ta提出的问题</a></dt> 
+				<dd id=LM1 style="DISPLAY: none">
+				{% if asked_que %}
+					{% for que in asked_que %}
+					<li><a href="/answer_question/?no={{que.No}}">{{que.Title}}</a></li>
+					{% endfor %}
+				{% else %}
+					<p>还没有提出问题哦</p>
+				{% endif %}
+				</dd>
+			<dt onClick=javascript:ShowFLT(2) href="javascript:void(null)"><a href="javascript:;">ta关注的问题</a></dt>
+				<dd id=LM2 style="DISPLAY: none">
+				{% if followed_que %}
+					{% for que in followed_que %}
+					<li><a href="/answer_question/?no={{que.No}}">{{que.Title}}</a></li>
+					{% endfor %}
+				{% else %}
+					<p>还没有关注问题哦</p>
+				{% endif %}
+				</dd>
+			<dt onClick=javascript:ShowFLT(3) href="javascript:void(null)"><a href="javascript:;">ta评论过的问题</a></dt>
+				<dd id=LM3 style="DISPLAY: none">
+				{% if comment_que %}
+					{% for que in comment_que %}
+					<li><a href="/answer_question/?no={{que.No}}">{{que.Title}}</a></li>
+					{% endfor %}
+				{% else %}
+					<p>还没有评论过问题哦</p>
+				{% endif %}
+				</dd>
+			</dl>
+			<label>回答</label>
+			<dl>
+			<dt onClick=javascript:ShowFLT(4) href="javascript:void(null)"><a href="javascript:;">ta的回答</a></dt> 
+				<dd id=LM4 style="DISPLAY: none">
+				{% if answered %}
+					{% for ans in answered %}
+					<li><a href="/answer_question/?no={{ans.1.Ans_Of_Question}}#ans-{{ans.1.Ans_No}}">{{ans.0.title}} - {other.User_Name}}的回答</a></li>
+					{% endfor %}
+				{% else %}
+					<p>还没有回答过问题哦</p>
+				{% endif %}
+				</dd>
+			<dt onClick=javascript:ShowFLT(5) href="javascript:void(null)"><a href="javascript:;">ta评论过的回答</a></dt>
+				<dd id=LM5 style="DISPLAY: none">
+				{% if comment_ans %}
+					{% for ans in comment_ans %}
+					<li><a href="/answer_question/?no={{ans.1.Ans_Of_Question}}#ans-{{ans.1.Ans_No}}">{{ans.0.title}} - {other.User_Name}}的回答</a></li>
+					{% endfor %}
+				{% else %}
+					<p>还没有评论过回答哦</p>
+				{% endif %}
+				</dd>
+			<dt onClick=javascript:ShowFLT(6) href="javascript:void(null)"><a href="javascript:;">ta赞同过的回答</a></dt>
+				<dd id=LM6 style="DISPLAY: none">
+				{% if voted_ans %}
+					{% for ans in voted_ans %}
+					<li><a href="/answer_question/?no={{ans.1.Ans_Of_Question}}#ans-{{ans.1.Ans_No}}">{{ans.0.title}} - {other.User_Name}}的回答</a></li>
+					{% endfor %}
+				{% else %}
+					<p>还没有赞同过回答哦</p>
+				{% endif %}
+				</dd>
+			</dl>
+			<label>其他人</label>
+			<dl>
+			<dt onClick=javascript:ShowFLT(7) href="javascript:void(null)"><a href="javascript:;">ta关注了</a></dt> 
+				<dd id=LM7 style="DISPLAY: none">
+				{% if followed_users %}
+					ta已关注了{{followed_users|length}}人
+					{% for followed in followed_users %}
+					<li><a href="/otherhome/?no={{followed.User_No}}">{{followed.User_Name}}</a></li>
+					{% endfor %}
+				{% else %}
+					<p>ta还没有关注的人哦</p>
+				{% endif %}
+				</dd>
+			<dt onClick=javascript:ShowFLT(8) href="javascript:void(null)"><a href="javascript:;">ta的关注者</a></dt>
+				<dd id=LM8 style="DISPLAY: none">
+				{% if follower_users %}
+					已有{{follower_users|length}}人关注了ta
+					{% for follower in follower_users %}
+					<li><a href="/otherhome/?no={{follower.User_No}}">{{follower.User_Name}}</a></li>
+					{% endfor %}
+				{% else %}
+					<p>还没有人关注ta哦</p>
+				{% endif %}
+				</dd>
+			</dl>
+	{% if islogin %}
+		{% if isfollowed %}
+			<form name="form" method="post" action="/cancel_follow/">
+			<input name="follow" type="hidden" value="{{other.User_No}}"/>
+			<input name="ok"  type="submit" class="submit"  id="cancel_follow" value="取消关注""></input>
+			</form>
+		{% else %}
+			<form name="form" method="post" action="/follow_user/">
+			<input name="follow" type="hidden" value="{{other.User_No}}"/>
+			<input name="ok"  type="submit" class="submit"  id="follow" value="关注""></input>
+			</form>
+		{% endif %}
+			<dl>
+			<dt onClick=javascript:ShowFLT(9) href="javascript:void(null)"><a href="javascript:;">私信ta</a></dt>
+			<dd id=LM9 style="DISPLAY: none">
+			<form class="form_contact" action="/contact_user/" method="post">
+				<p class="text">
+				<input name="contact" type="hidden" value="{{other.User_No}}"/>
+				<textarea name="contact_context" placeholder="私信"></textarea>
+				</p>
+				<p class="submit">
+				<input type="reset" value="重置" />
+				<input type="submit" value="发布" />
+				</p>
+			</form>
+			</dd>
+			</dl>
+			<a href='/'>返回</a>
+	{% else %}
+		<h1>你尚未登录</h1>
+		<p><a href='/'>返回</a>   <a href="/login/">滚去登录</a><p>
+	{% endif %}
+	</p>
+
+
+
+</body>
+</html>

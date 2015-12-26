@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>My home</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+{% load staticfiles %}<link rel="stylesheet" href="{% static 'styles/myhome_style.css'%}" type="text/css" media="all" />
+</head>
+<body>
+			<p id="top_info">
+				<h2>修改个人信息</h2>
+				<form class="form" action='/edit_detail/' method='post'>
+					<label>姓名</label>
+					<p class="name"><input type="text" name="name" placeholder="姓名" value="{{User.User_Name}}" /></p>
+					{% if n_error %} <p style="color: red;">姓名不能为空~</p> {% endif %}
+					<label>密码</label>
+					<p class="name"><input type="password" name="password" placeholder="密码" value="{{User.User_Pass}}" /></p>
+					{% if p_error %} <p style="color: red;">请输入密码！</p> {% endif %}
+					{% if p1_error %} <p style="color: red;">密码长度必须大于6位 </p> {% endif %}
+					<label>确认密码</label>
+					<p class="name"><input type="password" name="password_con" placeholder="确认密码" value="{{User.User_Pass}}" /></p>
+					{% if con_error %} <p style="color: red;">请确认密码！</p> {% endif %}
+					{% if equal_error %} <p style="color: red;">密码不一致！</p> {% endif %}
+					<p class="text">
+					<textarea name="text" value="{{User.User_Description}}">{{User.User_Description}}</textarea>
+					</p>
+					<p class="submit">
+					<a href='/myhome/'>返回个人主页</a>
+					<input type="submit" value="保存" />
+					</p>
+				</form>
+            </p>
+
+
+
+</body>
+</html>

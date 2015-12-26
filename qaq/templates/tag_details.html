@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="CHN/CN" lang="CHN/CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="content-type" content="text/html;charset=iso-8859-2" />
+	<meta name="author" content="Luka Cvrk (www.solucija.com)" />
+	{% load staticfiles %}<link rel="stylesheet" href="{% static 'styles/style.css'%}" type="text/css" />
+	<title>话题</title>
+	<script type="text/javascript">
+	function showHint(str)
+	{
+	var xmlhttp;
+	//if (str.length==0)
+	//  { 
+	//  document.getElementById("indexHint").innerHTML="";
+	//  return;
+	//  }
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+		document.getElementById("indexHint").innerHTML=xmlhttp.responseText;
+		}
+	  }
+	xmlhttp.open("GET","/indexhint.asp?q="+str,true);
+	xmlhttp.send();
+	}
+	</script>
+</head>
+<body>
+	<div id="content">
+		<div id="header">
+						<p id="top_info">
+            {% if islogin %}
+             <a href="/myhome/">我的主页</a>/<a href="/logout/">注销</a> 
+            {% else %}
+             <a href="/register/">注册</a>/<a href="/login/">登录</a> 
+            {% endif %}
+            </p>
+			
+			<div id="logo">
+				<h1><a href="#" title="Centralized Internet Content">小灰问答</a></h1>
+				<p>What do you want to share today?</p>
+			</div>
+		</div>
+					
+		<div id="tabs">
+			<ul>	
+				<li><a href="/" accesskey="m"><span class="key">首页</span></a></li>
+				<li><a href="/topic/" class="current" accesskey="v"><span class="key">话题</span></a></li>
+				<li><a href="/find/" accesskey="r"><span class="key">发现</span></a></li>
+                <li><a href="/info/" class="current" accesskey="v"><span class="key">消息</span></a></li>
+				<li><a href="/myhome/" accesskey="r"><span class="key">我的主页</span></a></li>
+                <li><a href="/ask/" accesskey="r"><span class="key">提问</span></a></li>
+			</ul>
+			<div id="search">
+				<form method="post" action="/search/">
+					<p><input type="text" name="lookfor" class="search" onkeyup="showHint(this.value)"  placeholder="搜索问题或作者"/> <input type="submit" value="Search" class="button" /></p>
+					<p><div id="indexHint"></div></p>
+				</form>
+			</div>
+		</div>
+		  <div class="left">
+			<div class="left_articles">
+				<h3>{{tag_string}}</h3>
+				<p>{{tag_description}}</p>
+			</div>
+		  </div>
+		<div class="footer">
+			&copy; <a href="#" title="Information Architecture and Web Design">Copyright 2015 Shawhure</a>
+		</div>
+	</div>
+</body>
+</html>

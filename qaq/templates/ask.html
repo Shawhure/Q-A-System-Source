@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>Ask</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+{% load staticfiles %}<link rel="stylesheet" href="{% static 'styles/ask_style.css'%}" type="text/css" media="all" />
+<script type="text/javascript">
+function showHint(str)
+{
+var xmlhttp;
+if (str.length==0)
+  { 
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+    }
+  }
+xmlhttp.open("GET","/gethint.asp?q="+str,true);
+xmlhttp.send();
+}
+</script>
+</head>
+<body>
+<form class="form" action="/add_question/" method="post">
+	<p class="name">
+		<input type="text" name="title" id="name" onkeyup="showHint(this.value)" placeholder="写下你的问题" />
+		<select name="tag"  class="select_box" >
+			<option value="0">自然语言</option>
+			<option value="1">数学</option>
+			<option value="2">外语</option>
+			<option value="3">计算机</option>
+			<option value="4">物理学</option>
+			<option value="5">化学</option>
+			<option value="6">生物科学</option>
+			<option value="7">地理学</option>
+			<option value="8">政治学</option>
+			<option value="9">经济学</option>
+			<option value="10">历史学</option>
+			<option value="11">社会学</option>
+			<option value="12">生活</option>
+			<option value="13">哲学</option>
+			<option value="14">体育</option>
+			<option value="15">健康</option>
+			<option value="16">情感</option>
+		</select>
+	</p>
+	<p><div id="txtHint"></div></p>
+	<p class="text">
+	<textarea name="description" placeholder="写下问题的详细描述"></textarea>
+	</p>
+	<p class="submit">
+	<input type="reset" value="取消" />
+	<input type="submit" value="发布" />
+	<h2><a href="/">点我返回</a><h2>
+	</p>
+</form>
+</body>
+</html>
